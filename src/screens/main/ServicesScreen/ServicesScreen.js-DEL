@@ -1,0 +1,164 @@
+import React, { Component } from "react";
+import { FlatList, Text, ScrollView, TouchableOpacity, View, Image, } from "react-native";
+
+import { BleManager } from "react-native-ble-plx";
+// import { ServiceItem,NavigationHeader} from "../../../components";
+import { styles } from "./styles";
+import { images, icons } from "../../../assets";
+import RNImmediatePhoneCall from "react-native-immediate-phone-call";
+import Modal from "react-native-modal";
+import ListItem from './ListItem';
+import WebViewComp from './WebViewComp'
+import { AppConstants, StorageUtils } from "../../../utils";
+import { Row, Col } from "../../../components";
+
+
+export default class ServicesScreen extends Component {
+  constructor() {
+    super();
+    this.state = { modalVisible: false, showWebView: false, country: null, user_modules: "", showMessage:false };
+    this.manager = new BleManager();
+    // this.country = null;//StorageUtils.getValue(AppConstants.SP.COUNTRY);
+  }
+
+  USAArray = () => [
+    { title: "I need to chat with a Doctor online", onPress: () => this.openWebView(), disabled: (this.state.user_modules.indexOf('YDO1') < 0) },
+  ];
+
+  canadaArray = () => [
+    { title: "I need to call a Nurse", onPress: () => this.setModalVisible(true), disabled: (this.state.user_modules.indexOf('CallNurse') < 0) },
+    { title: "I need a perscription or consultation from a Licensed Doctor", onPress: () => this.props.navigation.navigate("HealthSuiteScreen"), disabled: (this.state.user_modules.indexOf('YDO2') < 0) },
+    { title: "I need Home Care or Personal Support staff", onPress: () => this.setState({ showMessage:"Please upgrade your package!" }), disabled: (this.state.user_modules.indexOf('HomeCare') < 0) },
+    { title: "I need to chat with a Doctor online", onPress: () => this.openWebView(), disabled: (this.state.user_modules.indexOf('YDO1') < 0) },
+  ];
+
+  componentDidMount(){
+    StorageUtils.getValue('user_modules').then(r => this.setState({user_modules:r||""}));
+
+    // console.log("componentDidMount()")
+    // StorageUtils.getValue(AppConstants.SP.COUNTRY).then(country => {
+    //   console.log("country: ", country);
+    //   this.setState({ country })
+    // });
+  }
+
+  updateState = args => {
+    StorageUtils.getValue(AppConstants.SP.COUNTRY).then(country => {
+      console.log("country: ", country);
+      if (country !== this.state.country) this.setState({ country })
+    });
+  }
+
+  setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });
+  }
+  
+  makeCall = (phone) => () => {
+    if (phone) RNImmediatePhoneCall.immediatePhoneCall(phone);
+    else showMessage("No phone number given", "short");
+  };
+
+  buttonClickedHandler = () => {
+    console.log('You are calling!');
+    // do something
+    this.makeCall("4168288085");
+  };
+
+  openWebView = async args => {
+    this.setState({showWebView:true});
+  }
+   
+  // onPressDeviceItem = (selectedDevice) => {
+  //   console.log("onPressDeviceItem: ", selectedDevice);
+    
+  //   const { navigation } = this.props;
+  //   if(selectedDevice.title == "I need to call a Nurse"){
+  //   this.setModalVisible(true)};
+
+  //   if(selectedDevice.title == "I need Home Care or Personal Support staff"){
+  //     console.log(selectedDevice.title);
+  //     navigation.navigate("HealthSuiteScreen");
+  //     };
+  // };
+
+  renderListItem = (item) => {
+    return (<ListItem data={item} />);
+  };
+
+  rendersubItem = (item) => {
+    return (<ListItem data={item} onPress={item.onPress} disabled={item.disabled} style={{ marginLeft: 35}} />);
+    // onPress={this.onPressDeviceItem} 
+  }
+ 
+ 
+  render() {
+    // const { navigation } = this.props;
+    // console.log("this.state.user_modules: ", this.state.user_modules);
+    
+    const { modalVisible, showWebView, country, showMessage } = this.state;
+    this.updateState();
+
+    return (<>
+      <ScrollView _contentContainerStyle={styles.container} contentContainerStyle={{flex:1}}>
+        <View style={styles.container}>
+
+          {(country == 'USA' || country=='United Stated') ?
+            <>
+              <Text style={{...styles.heading}}>I live in USA</Text>
+              <View>
+                <FlatList data={this.USAArray()} renderItem={({ item }) => this.rendersubItem(item)} keyExtractor={(item, index) => index.toString()} />
+                {/* <FlatList data={USAArray} renderItem={({ item }) => this.renderListItem(item)} keyExtractor={(item, index) => index.toString()} /> */}
+              </View>
+            </>
+            :
+            <>
+              <Text style={{ ...styles.heading }}>I live in Canada</Text>
+              {/* <Text style={{ ...styles.heading, marginLeft: 45 }}>I live in Ontario</Text> */}
+              <View>
+                <FlatList data={this.canadaArray()} renderItem={({ item }) => this.rendersubItem(item)} keyExtractor={(item, index) => index.toString()} />
+              </View>
+            </>
+          }
+
+        </View>
+      </ScrollView>
+
+      <Modal animationType="slide" transparent={true} isVisible={modalVisible} onRequestClose={() => { Alert.alert("Modal has been closed."); }} >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Image style={styles.image} source={images.telehealth_ontario} />
+
+            <Text style={styles.teletext}>Telehealth Ontario is a free, confidential service you can call to get health advice or information. A registered Nurse
+            will take your call 24 hours a day, seven days a week. Assisstance is available in more than 300 languages.
+              </Text>
+            <View style={styles.mini}>
+              <TouchableOpacity onPress={this.buttonClickedHandler} style={styles.roundButton1}>
+                <Image source={icons.call_blue} style={{ tintColor: 'white', width: 20, height: 20 }} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.openButton} onPress={() => { this.setModalVisible(!modalVisible); }}>
+                <Text style={styles.textStyle}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+        </View>
+      </Modal>
+
+      <Modal animationType="slide" transparent={true} isVisible={showWebView} onRequestClose={() => { Alert.alert("Modal has been closed."); }} >
+        {showWebView && <WebViewComp onClose={() => this.setState({ showWebView:false })} />}
+      </Modal>
+
+      <Modal animationType="slide" transparent={true} isVisible={showMessage!=false} onRequestClose={() => { this.setState({ showMessage:false }) }} >
+        {showMessage && <View style={{backgroundColor:"#FFF", padding:20, borderRadius:10}}>
+            <Row style={{marginBottom:10, paddingBottom:10}}>
+              <Col flex="auto"></Col>
+              <Col><TouchableOpacity onPress={() => this.setState({ showMessage:false })}><Text>X</Text></TouchableOpacity></Col>
+            </Row>
+            <Text>{showMessage}</Text>
+          </View>}
+      </Modal>
+
+
+    </>);
+  }
+}

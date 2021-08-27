@@ -1,0 +1,91 @@
+import { Platform, StyleSheet } from "react-native";
+
+import { theme } from "../../theme";
+
+export const styles = StyleSheet.create({
+  pickerContainer: {
+    height: 45,
+    backgroundColor: "rgba(0, 0, 0, 0.35)",
+    marginTop: 7,
+    marginLeft: 30,
+    marginRight: 30,
+    borderRadius: 8,
+    marginBottom: 7,
+    ...(Platform.OS === "ios" ? { padding: 16, paddingRight: 6 } : {}),
+  },
+  pickerImage: {
+    alignSelf: "center",
+    marginTop: Platform.OS === "ios" ? 2 : 18,
+    marginRight: 12,
+    backgroundColor: "transparent",
+    borderTopWidth: 5,
+    borderTopColor: "white",
+    borderRightWidth: 5,
+    borderRightColor: "transparent",
+    borderLeftWidth: 5,
+    borderLeftColor: "transparent",
+    width: 0,
+    height: 0,
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    height: 45,
+    color: theme.colors.white,
+    alignItems: "center",
+    fontSize: 15,
+    fontFamily: theme.fonts.SFProRegular,
+    backgroundColor: "transparent",
+    marginTop: 7,
+    borderRadius: 8,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderColor: theme.colors.colorPrimary,
+    borderWidth: 1
+  },
+  passwordInput: {
+    flex: 1,
+    color: theme.colors.black,
+    paddingLeft: 4,
+  },
+  buttonGroupContainer: {
+    borderRadius: 10,
+    backgroundColor: "rgba(118, 118, 128, 0.12)",
+    height: 45,
+    borderWidth: 0,
+  },
+  buttonGroupText: {
+    color: theme.colors.white,
+    fontFamily: theme.fonts.SFProSemibold,
+  },
+  selectedButton: {
+    backgroundColor: theme.colors.colorPrimary,
+  },
+  selectedButtonText: {
+    color: theme.colors.white,
+    fontSize: 16,
+    fontFamily: theme.fonts.SFProBold,
+  },
+  termsPolicyText: {
+    marginVertical: 16,
+    marginLeft: 5,
+    marginRight: 30,
+    color: theme.colors.colorPrimary,
+    fontFamily: theme.fonts.SFProRegular,
+    fontSize: 16,
+    textAlign: 'justify',
+    textAlign: 'left',
+  },
+  buttonWhiteBg: {
+    height: 45,
+    backgroundColor: theme.colors.colorPrimary,
+    borderRadius: 10,
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "rgba(0, 0, 0, 0.1)",
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
+    shadowOffset: { width: 1, height: 5 },
+  },
+});

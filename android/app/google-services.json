@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "298346694287",
+    "firebase_url": "https://sensights.firebaseio.com",
+    "project_id": "sensights",
+    "storage_bucket": "sensights.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298346694287:android:ad979c048cb694ea7912fa",
+        "android_client_info": {
+          "package_name": "com.sensights"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298346694287-3kjpv1mr48a8qirj4atf6se4p4nbd4f2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDALiX0GfyFWNRveyGTYFlOjG1ddUAqR_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298346694287-3kjpv1mr48a8qirj4atf6se4p4nbd4f2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "298346694287-n76jcrjfirc0kfc9gskkh84m3hb76dko.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sensights"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
